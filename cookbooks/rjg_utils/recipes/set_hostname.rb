@@ -15,6 +15,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+rjg_utils_system "Reboot System For Hostname" do
+  node_attribute "rjg_utils_hostname_reboot"
+  action :nothing
+end
+
 powershell "Set the computer hostname and workgroup name" do
   parameters({
     'HOSTNAME' => node[:rjg_utils][:hostname],
@@ -87,9 +92,5 @@ set-chefnode rjg_utils_hostname_reboot -BooleanValue $needsReboot
 EOF
 
   source(powershell_script)
-end
-
-rjg_utils_system "Reboot System" do
-  node_attribute "rjg_utils_hostname_reboot"
-  action :conditional_reboot
+  notifies :conditional_reboot, resources(:rjg_utils_system => "Reboot System For Hostname"), :delayed
 end
