@@ -47,6 +47,8 @@ remote_hash = {
   }
 }
 
+Chef::Log.info("The server name is #{node[:db_mssql][:server_name]}")
+
 directory backup_dir do
   recursive true
   action [:delete, :create]
